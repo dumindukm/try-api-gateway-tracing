@@ -1,0 +1,17 @@
+{
+  "Routes": [
+    {
+      "DownstreamPathTemplate": "/api/products",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 42533
+        }
+      ],
+      "UpstreamPathTemplate": "/gateway/product",
+      "UpstreamHttpMethod": [ "POST", "PUT", "GET" ]
+    }
+  ],
+  "GlobalConfiguration": { "BaseUrl": "https://localhost:44330" }
+}
