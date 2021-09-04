@@ -13,6 +13,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using OpenTelemetry.Trace;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Instrumentation.AspNetCore;
+using OpenTelemetry.Exporter;
 
 namespace Web.BaseApiGateway
 {
@@ -37,6 +41,22 @@ namespace Web.BaseApiGateway
 
             services.AddOcelot(Configuration);
 
+            //https://github.com/open-telemetry/opentelemetry-dotnet/tree/main/examples/AspNetCore
+            // https://github.com/open-telemetry/opentelemetry-dotnet
+            //https://docs.microsoft.com/en-us/dotnet/core/diagnostics/distributed-tracing-concepts
+            // https://www.mytechramblings.com/posts/getting-started-with-opentelemetry-and-dotnet-core/
+            // https://hub.docker.com/r/jaegertracing/all-in-one
+            services.AddOpenTelemetryTracing(
+                (builder) => builder
+                    .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService(this.Configuration.GetValue<string>("Jaeger:ServiceName")))
+                    .AddAspNetCoreInstrumentation()
+                    .AddHttpClientInstrumentation()
+                    .AddJaegerExporter()
+                    
+            );
+
+            services.Configure<JaegerExporterOptions>(this.Configuration.GetSection("Jaeger"));
+            services.Configure<AspNetCoreInstrumentationOptions>(this.Configuration.GetSection("AspNetCoreInstrumentation"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using OpenTelemetry.Logs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +22,19 @@ namespace Web.BaseApiGateway
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
+                })
+                .ConfigureLogging((context, builder)=> {
+                    var useLogging = context.Configuration.GetValue<bool>("UseLogging");
+                    if (useLogging)
+                    {
+                        builder.AddOpenTelemetry(options =>
+                        {
+                            options.IncludeScopes = true;
+                            options.ParseStateValues = true;
+                            options.IncludeFormattedMessage = true;
+                            options.AddConsoleExporter();
+                        });
+                    }
                 })
                 .ConfigureAppConfiguration((hostingContext, config) =>
                 {

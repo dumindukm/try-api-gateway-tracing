@@ -26,7 +26,7 @@ namespace ProductsApi.Controllers
             return Enumerable.Range(1, 5).Select(index => new ProductViewModel
             {
                 Id = index,
-                Name = "p"+index
+                Name = "P"+index
             })
             .ToArray();
         }
