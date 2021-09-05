@@ -1,40 +1,36 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using CustomersApi.ViewModels;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace ProductsApi.Controllers
+namespace CustomersApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProductsController : ControllerBase
+    public class CustomersController : ControllerBase
     {
-        private readonly ILogger<ProductsController> _logger;
-        HttpClient httpclient;
-        public ProductsController(ILogger<ProductsController> logger , IHttpClientFactory clientFactory)
+        private readonly ILogger<CustomersController> _logger;
+
+        public CustomersController(ILogger<CustomersController> logger)
         {
             _logger = logger;
-            httpclient = clientFactory.CreateClient();
         }
 
         [HttpGet]
-        public IEnumerable<ProductViewModel> Get()
+        public IEnumerable<CustomerViewModel> Get()
         {
             _logger.LogInformation("Hello from {name} {price}.", "tomato", 2.99);
             _logger.LogTrace($"Trace id :{Activity.Current.TraceId} ParentSpanId {Activity.Current.ParentSpanId} ParentId {Activity.Current.ParentId}  ");
-
-            var s = httpclient.GetAsync("https://localhost:44345/api/customers").Result.StatusCode;
-
             var rng = new Random();
-            return Enumerable.Range(1, 5).Select(index => new ProductViewModel
+            return Enumerable.Range(1, 5).Select(index => new CustomerViewModel
             {
                 Id = index,
-                Name = "P"+index
+                Name = "CU" + index
             })
             .ToArray();
         }

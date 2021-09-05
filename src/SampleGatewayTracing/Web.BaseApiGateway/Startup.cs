@@ -49,8 +49,10 @@ namespace Web.BaseApiGateway
             services.AddOpenTelemetryTracing(
                 (builder) => builder
                     .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService(this.Configuration.GetValue<string>("Jaeger:ServiceName")))
+                    .AddSource("GatwayApiSouce")
                     .AddAspNetCoreInstrumentation()
                     .AddHttpClientInstrumentation()
+                    .AddConsoleExporter()
                     .AddJaegerExporter()
                     
             );
